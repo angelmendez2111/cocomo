@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:cocomo_software/cocomo_intermedio_calculator.dart';
+
+String _modoGuardado = '';
+double _kldcGuardado = 0.0;
+double _fecGuardado = 1.0;
 
 class Cocomo81View extends StatelessWidget {
   const Cocomo81View({super.key});
@@ -23,13 +28,19 @@ class Cocomo81View extends StatelessWidget {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 1400),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 32),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 32,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'COCOMO-81 Intermedio',
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     const Text(
@@ -39,14 +50,24 @@ class Cocomo81View extends StatelessWidget {
                     const SizedBox(height: 16),
                     Builder(
                       builder: (context) {
-                        final TabController tabController = TabController(length: 3, vsync: Scaffold.of(context), animationDuration: Duration.zero);
+                        final TabController tabController = TabController(
+                          length: 3,
+                          vsync: Scaffold.of(context),
+                          animationDuration: Duration.zero,
+                        );
                         return Column(
                           children: [
                             TabBar(
                               controller: tabController,
                               labelColor: Colors.black,
-                              labelStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                              unselectedLabelStyle: const TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                              labelStyle: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              unselectedLabelStyle: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.w500,
+                              ),
                               indicatorWeight: 4,
                               tabs: const [
                                 Tab(text: 'Modo y Tamaño'),
@@ -60,19 +81,30 @@ class Cocomo81View extends StatelessWidget {
                               child: TabBarView(
                                 controller: tabController,
                                 children: [
-                                  SingleChildScrollView(child: _ModoYTamanoTab()),
+                                  SingleChildScrollView(
+                                    child: _ModoYTamanoTab(),
+                                  ),
                                   Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       const SizedBox(height: 12),
                                       Center(
                                         child: Container(
-                                          constraints: const BoxConstraints(maxWidth: 600),
-                                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                                          constraints: const BoxConstraints(
+                                            maxWidth: 600,
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 32,
+                                            vertical: 24,
+                                          ),
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            border: Border.all(color: Colors.black26),
-                                            borderRadius: BorderRadius.circular(10),
+                                            border: Border.all(
+                                              color: Colors.black26,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
                                             boxShadow: [
                                               BoxShadow(
                                                 color: Colors.black12,
@@ -83,12 +115,16 @@ class Cocomo81View extends StatelessWidget {
                                           ),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
                                               const Center(
                                                 child: Text(
                                                   'Costo persona-mes',
-                                                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                                  style: TextStyle(
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                                   textAlign: TextAlign.center,
                                                 ),
                                               ),
@@ -96,24 +132,46 @@ class Cocomo81View extends StatelessWidget {
                                               Row(
                                                 children: const [
                                                   Expanded(
-                                                    child: Text('Etapa', style: TextStyle(fontWeight: FontWeight.bold)),
+                                                    child: Text(
+                                                      'Etapa',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
                                                   ),
                                                   Expanded(
                                                     child: Text(
                                                       'Costo persona-mes',
-                                                      style: TextStyle(fontWeight: FontWeight.bold),
-                                                      textAlign: TextAlign.center,
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center,
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                               const SizedBox(height: 4),
-                                              _CostoPersonaMesRow(etapa: 'Análisis'),
-                                              _CostoPersonaMesRow(etapa: 'Diseño'),
-                                              _CostoPersonaMesRow(etapa: 'Diseño detallado'),
-                                              _CostoPersonaMesRow(etapa: 'Codificación'),
-                                              _CostoPersonaMesRow(etapa: 'Integración'),
-                                              _CostoPersonaMesRow(etapa: 'Mantenimiento'),
+                                              _CostoPersonaMesRow(
+                                                etapa: 'Análisis',
+                                              ),
+                                              _CostoPersonaMesRow(
+                                                etapa: 'Diseño',
+                                              ),
+                                              _CostoPersonaMesRow(
+                                                etapa: 'Diseño detallado',
+                                              ),
+                                              _CostoPersonaMesRow(
+                                                etapa: 'Codificación',
+                                              ),
+                                              _CostoPersonaMesRow(
+                                                etapa: 'Integración',
+                                              ),
+                                              _CostoPersonaMesRow(
+                                                etapa: 'Mantenimiento',
+                                              ),
                                               const SizedBox(height: 16),
                                               SizedBox(
                                                 width: 120,
@@ -152,7 +210,8 @@ class _ModoYTamanoTab extends StatefulWidget {
   State<_ModoYTamanoTab> createState() => _ModoYTamanoTabState();
 }
 
-class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliveClientMixin {
+class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -160,28 +219,66 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
   String _tamanoSoftware = 'KLDC';
   String _valorKLDC = '';
   String _lenguajeSeleccionado = 'Escoge';
+  int _resultadoPF = 0;
+  double _resultadoKLDC = 0.0;
 
+
+  final cocomo = CocomoCalculator();
   final List<String> _opcionesModo = ['Orgánico', 'Moderado', 'Empotrado'];
   final List<String> _opcionesLenguaje = [
     'Escoge',
-    'Java',
+    '4GL',
+    'Ada 83',
+    'Ada 95',
+    'APL',
+    'BASIC - Compilado',
+    'BASIC - Interpretado',
+    'BASIC ANSI/Quick/Turbo',
     'C',
     'C++',
-    'C#',
-    'Python',
-    'JavaScript',
-    'Kotlin',
-    'Swift',
+    'Clipper',
+    'Cocol ANSI 85',
+    'Delphi 1',
+    'Ensamblador',
+    'Ensamblador (Macro)',
+    'Forth',
+    'Fortran 77',
+    'FoxPro 2.5',
+    'Java',
+    'Modula 2',
+    'Oracle',
+    'Oracle 2000',
+    'Paradox',
+    'Pascal',
+    'Pascal Turbo 5',
+    'Power Builder',
+    'Prolog',
+    'Visual Basic 3',
+    'Visual C++',
+    'Visual Cobol',
   ];
 
   final Map<String, String> _textoModo = {
-    'Orgánico': 'Proyectos de software pequeños y sencillos en los que trabajan pequenos equipos, con buena experiencia en la aplicación, sobre un conjunto de requisitos poco rígidos',
-    'Moderado': 'Proyectos de software intermedios en tamaño y complejidad en los que equipos, con variados niveles de experiencia, deben satisfacer requisitos medio rigidos',
-    'Empotrado': 'Proyectos de software complejos que deben ser desarrollados en un conjunto de hardware, software y restricciones operativas muy restringido.',
+    'Orgánico':
+        'Proyectos de software pequeños y sencillos en los que trabajan pequenos equipos, con buena experiencia en la aplicación, sobre un conjunto de requisitos poco rígidos',
+    'Moderado':
+        'Proyectos de software intermedios en tamaño y complejidad en los que equipos, con variados niveles de experiencia, deben satisfacer requisitos medio rigidos',
+    'Empotrado':
+        'Proyectos de software complejos que deben ser desarrollados en un conjunto de hardware, software y restricciones operativas muy restringido.',
   };
 
   // Estado de selección de la tabla (5 filas x 3 columnas)
   List<int?> _seleccionTabla = List.generate(5, (_) => null); // null: nada, 0: baja, 1: media, 2: alta
+  final List<List<TextEditingController>> _pfControllers = List.generate(
+    5,
+    (_) => List.generate(3, (_) => TextEditingController()),
+  );
+
+  final GlobalKey<_CostDriverSectionState> _productoKey = GlobalKey();
+  final GlobalKey<_CostDriverSectionState> _proyectoKey = GlobalKey();
+  final GlobalKey<_CostDriverSectionState> _personalKey = GlobalKey();
+  final GlobalKey<_CostDriverSectionState> _plataformaKey = GlobalKey();
+
 
   @override
   Widget build(BuildContext context) {
@@ -247,9 +344,16 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
                                             _modoDesarrollo = value!;
                                           });
                                         },
-                                        dropdownMenuEntries: _opcionesModo
-                                            .map((op) => DropdownMenuEntry<String>(value: op, label: op))
-                                            .toList(),
+                                        dropdownMenuEntries:
+                                            _opcionesModo
+                                                .map(
+                                                  (op) =>
+                                                      DropdownMenuEntry<String>(
+                                                        value: op,
+                                                        label: op,
+                                                      ),
+                                                )
+                                                .toList(),
                                       ),
                                     ),
                                   ],
@@ -257,7 +361,10 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
                                 const SizedBox(height: 15),
                                 Text(
                                   _textoModo[_modoDesarrollo] ?? '',
-                                  style: const TextStyle(fontSize: 13, color: Colors.black54),
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black54,
+                                  ),
                                   textAlign: TextAlign.justify,
                                 ),
                               ],
@@ -325,7 +432,11 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
                                           keyboardType: TextInputType.number,
                                           decoration: const InputDecoration(
                                             isDense: true,
-                                            contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                  vertical: 8,
+                                                  horizontal: 8,
+                                                ),
                                             border: OutlineInputBorder(),
                                           ),
                                           onChanged: (value) {
@@ -400,7 +511,10 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
                           children: [
                             const Text(
                               'Lenguaje de programación:',
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                             const SizedBox(width: 12),
                             SizedBox(
@@ -412,9 +526,15 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
                                     _lenguajeSeleccionado = value!;
                                   });
                                 },
-                                dropdownMenuEntries: _opcionesLenguaje
-                                    .map((op) => DropdownMenuEntry<String>(value: op, label: op))
-                                    .toList(),
+                                dropdownMenuEntries:
+                                    _opcionesLenguaje
+                                        .map(
+                                          (op) => DropdownMenuEntry<String>(
+                                            value: op,
+                                            label: op,
+                                          ),
+                                        )
+                                        .toList(),
                               ),
                             ),
                           ],
@@ -422,7 +542,10 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
 
                         const SizedBox(height: 16),
                         Table(
-                          border: TableBorder.all(color: Colors.black, width: 2),
+                          border: TableBorder.all(
+                            color: Colors.black,
+                            width: 2,
+                          ),
                           columnWidths: const {
                             0: FlexColumnWidth(2),
                             1: FlexColumnWidth(),
@@ -434,19 +557,47 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
                               children: [
                                 Padding(
                                   padding: EdgeInsets.all(4.0),
-                                  child: Center(child: Text('Tipo de Función', style: TextStyle(fontWeight: FontWeight.bold))),
+                                  child: Center(
+                                    child: Text(
+                                      'Tipo de Función',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(4.0),
-                                  child: Center(child: Text('Baja', style: TextStyle(fontWeight: FontWeight.bold))),
+                                  child: Center(
+                                    child: Text(
+                                      'Baja',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(4.0),
-                                  child: Center(child: Text('Media', style: TextStyle(fontWeight: FontWeight.bold))),
+                                  child: Center(
+                                    child: Text(
+                                      'Media',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.all(4.0),
-                                  child: Center(child: Text('Alta', style: TextStyle(fontWeight: FontWeight.bold))),
+                                  child: Center(
+                                    child: Text(
+                                      'Alta',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
@@ -465,23 +616,18 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
                                     child: Text(tipos[row]),
                                   ),
                                   ...List.generate(3, (col) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          _seleccionTabla[row] = col;
-                                        });
-                                      },
-                                      child: Container(
-                                        height: 32,
-                                        margin: const EdgeInsets.all(4),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.black, width: 2),
-                                          color: Colors.white,
-                                        ),
-                                        child: Center(
-                                          child: _seleccionTabla[row] == col
-                                              ? const Text('X', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.green))
-                                              : const SizedBox.shrink(),
+                                    return Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: TextField(
+                                        controller: _pfControllers[row][col],
+                                        keyboardType: TextInputType.number,
+                                        decoration: const InputDecoration(
+                                          isDense: true,
+                                          border: OutlineInputBorder(),
+                                          contentPadding: EdgeInsets.symmetric(
+                                            vertical: 8,
+                                            horizontal: 8,
+                                          ),
                                         ),
                                       ),
                                     );
@@ -498,19 +644,41 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
                             ElevatedButton(
                               onPressed: () {
                                 setState(() {
-                                  _seleccionTabla = List.generate(5, (_) => null);
+                                  for (var fila in _pfControllers) {
+                                    for (var controller in fila) {
+                                      controller.clear();
+                                    }
+                                  }
+                                  _resultadoPF = 0;
+                                  _resultadoKLDC = 0.0;
                                 });
                               },
                               child: const Text('Limpiar'),
                             ),
                             const SizedBox(width: 16),
-                            ElevatedButton(onPressed: () {}, child: const Text('Calcular')),
+                            ElevatedButton(
+                              onPressed: () {
+                                final totalPF = cocomo.calcularPuntosFuncion(
+                                  _pfControllers,
+                                );
+                                final loc = cocomo.convertirPFaKLDC(
+                                  totalPF,
+                                  _lenguajeSeleccionado,
+                                );
+
+                                setState(() {
+                                  _resultadoPF = totalPF;
+                                  _resultadoKLDC = loc;
+                                });
+                              },
+                              child: const Text('Calcular'),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 16),
-                        const Text('Total:'),
+                        Text('Total: $_resultadoPF Puntos de Función'),
                         const SizedBox(height: 4),
-                        const Text('Líneas de Código (LOC):'),
+                        Text('Líneas de Código (KLDC): ${_resultadoKLDC.toStringAsFixed(2)}'),
                       ],
                     ),
                   ),
@@ -562,14 +730,16 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: _CostDriverBox(
+                            child: _CostDriverSection(
+                              key: _productoKey,
                               title: 'Producto',
                               items: ['RSS', 'TBD', 'CPR'],
                             ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: _CostDriverBox(
+                            child: _CostDriverSection(
+                              key: _proyectoKey,
                               title: 'Proyecto',
                               items: ['UTP', 'UHS', 'RPL'],
                             ),
@@ -581,14 +751,16 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: _CostDriverBox(
+                            child: _CostDriverSection(
+                              key: _personalKey,
                               title: 'Personal',
                               items: ['CAN', 'EAN', 'CPRO', 'ESO', 'ELP'],
                             ),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
-                            child: _CostDriverBox(
+                            child: _CostDriverSection(
+                              key: _plataformaKey,
                               title: 'Plataforma',
                               items: ['RTE', 'RMP', 'VMC', 'TRC'],
                             ),
@@ -599,7 +771,56 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            final seleccionados = {
+                              ...?_productoKey.currentState?.getSelecciones(),
+                              ...?_proyectoKey.currentState?.getSelecciones(),
+                              ...?_personalKey.currentState?.getSelecciones(),
+                              ...?_plataformaKey.currentState?.getSelecciones(),
+                            };
+                            // print('SELECCIONADOS: $seleccionados');
+
+                            final fec =
+                                cocomo.calcularFECDesdeCostDrivers(
+                                  seleccionados,
+                                );
+
+                            setState(() {
+                              _modoGuardado = _modoDesarrollo;
+                              _kldcGuardado =
+                                  _resultadoKLDC > 0
+                                      ? _resultadoKLDC
+                                      : double.tryParse(_valorKLDC) ?? 0.0;
+                              _fecGuardado = fec;
+                            });
+
+                            showDialog(
+                              context: context,
+                              builder:
+                                  (_) => AlertDialog(
+                                    title: const Text('Resultado'),
+                                    content: Text(
+                                      'modo: $_modoGuardado\n'
+                                      'KLDC: $_kldcGuardado\n'
+                                      'fec: $_fecGuardado\n',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                            );
+
+                            // ScaffoldMessenger.of(context).showSnackBar(
+                            //   const SnackBar(
+                            //     content: Text(
+                            //       'Parámetros guardados correctamente',
+                            //     ),
+                            //   ),
+                            // );
+                          },
                           child: const Text('Guardar'),
                         ),
                       ),
@@ -613,26 +834,58 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab> with AutomaticKeepAliv
       ],
     );
   }
+  @override
+  void dispose() {
+    for (final fila in _pfControllers) {
+      for (final controller in fila) {
+        controller.dispose();
+      }
+    }
+    super.dispose();
+  }
+
 }
 
 class _CostDriverSection extends StatefulWidget {
   final String title;
   final List<String> items;
-  const _CostDriverSection({required this.title, required this.items});
+  const _CostDriverSection({Key? key, required this.title, required this.items})
+    : super(key: key); 
 
   @override
   State<_CostDriverSection> createState() => _CostDriverSectionState();
 }
 
 class _CostDriverSectionState extends State<_CostDriverSection> {
-  final List<String> opciones = ['Muy bajo', 'Bajo', 'Nominal', 'Alto', 'Muy alto'];
-  late List<String> seleccionadas;
+  final List<List<String>> opcionesPorItem = [];
 
   @override
   void initState() {
     super.initState();
-    seleccionadas = List.generate(widget.items.length, (_) => 'Nominal');
+    seleccionadas = [];
+    for (var item in widget.items) {
+      final opciones = costDriverValues[item]?.keys.toList() ?? ['Nominal'];
+      opcionesPorItem.add(opciones);
+      seleccionadas.add('Nominal'); // valor por defecto
+    }
   }
+
+  late List<String> seleccionadas;
+
+  Map<String, String> getSelecciones() {
+    final Map<String, String> resultado = {};
+    for (int i = 0; i < widget.items.length; i++) {
+      resultado[widget.items[i]] = seleccionadas[i];
+    }
+    return resultado;
+  }
+
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   seleccionadas = List.generate(widget.items.length, (_) => 'Nominal');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -641,30 +894,41 @@ class _CostDriverSectionState extends State<_CostDriverSection> {
       children: [
         Text(widget.title, style: const TextStyle(fontWeight: FontWeight.bold)),
         const SizedBox(height: 8),
-        ...List.generate(widget.items.length, (i) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(
-                width: 70,
-                child: Text(widget.items[i], style: const TextStyle(fontSize: 15)),
-              ),
-              SizedBox(
-                width: 150,
-                child: DropdownMenu<String>(
-                  initialSelection: seleccionadas[i],
-                  onSelected: (String? value) {
-                    setState(() {
-                      seleccionadas[i] = value!;
-                    });
-                  },
-                  dropdownMenuEntries: opciones.map((op) => DropdownMenuEntry<String>(value: op, label: op)).toList(),
+        ...List.generate(
+          widget.items.length,
+          (i) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 70,
+                  child: Text(
+                    widget.items[i],
+                    style: const TextStyle(fontSize: 15),
+                  ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  width: 150,
+                  child: DropdownMenu<String>(
+                    initialSelection: seleccionadas[i],
+                    onSelected: (String? value) {
+                      setState(() {
+                        seleccionadas[i] = value!;
+                      });
+                    },
+                    dropdownMenuEntries:
+                        opcionesPorItem[i]
+                            .map(
+                              (op) => DropdownMenuEntry(value: op, label: op),
+                            )
+                            .toList(),
+                  ),
+                ),
+              ],
+            ),
           ),
-        )),
+        ),
         const SizedBox(height: 8),
       ],
     );
@@ -684,11 +948,7 @@ class _CostDriverBox extends StatelessWidget {
         border: Border.all(color: Colors.black26),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 2,
-            offset: Offset(0, 1),
-          ),
+          BoxShadow(color: Colors.black12, blurRadius: 2, offset: Offset(0, 1)),
         ],
       ),
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
@@ -716,7 +976,10 @@ class _CostoPersonaMesRow extends StatelessWidget {
                 decoration: const InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 8,
+                  ),
                 ),
               ),
             ),
@@ -733,7 +996,8 @@ class _EstimacionTab extends StatefulWidget {
   State<_EstimacionTab> createState() => _EstimacionTabState();
 }
 
-class _EstimacionTabState extends State<_EstimacionTab> with AutomaticKeepAliveClientMixin {
+class _EstimacionTabState extends State<_EstimacionTab>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -781,10 +1045,15 @@ class _EstimacionTabState extends State<_EstimacionTab> with AutomaticKeepAliveC
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
-                            Text('Ecuaciones Utilizadas', style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text(
+                              'Ecuaciones Utilizadas',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
                             SizedBox(height: 8),
                             Text('Esfuerzo (ESF) = 2.8 × (KLDC)^1.20 × FEC'),
-                            Text('Tiempo de desarrollo (TDES) = 2.5 × (ESF)^0.32'),
+                            Text(
+                              'Tiempo de desarrollo (TDES) = 2.5 × (ESF)^0.32',
+                            ),
                           ],
                         ),
                       ),
@@ -794,8 +1063,14 @@ class _EstimacionTabState extends State<_EstimacionTab> with AutomaticKeepAliveC
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: const [
-                            Text('* KLCD: tamaño del proyecto en Kilo Líneas de Código', style: TextStyle(fontSize: 12)),
-                            Text('* FEC: conductores de coste', style: TextStyle(fontSize: 12)),
+                            Text(
+                              '* KLCD: tamaño del proyecto en Kilo Líneas de Código',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            Text(
+                              '* FEC: conductores de coste',
+                              style: TextStyle(fontSize: 12),
+                            ),
                           ],
                         ),
                       ),
@@ -815,7 +1090,10 @@ class _EstimacionTabState extends State<_EstimacionTab> with AutomaticKeepAliveC
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Resultado de la Estimación', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Resultado de la Estimación',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 12),
                       Row(
                         children: [
@@ -860,7 +1138,10 @@ class _EstimacionTabState extends State<_EstimacionTab> with AutomaticKeepAliveC
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Estimación por Etapas', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Estimación por Etapas',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       Table(
                         columnWidths: const {
@@ -875,23 +1156,42 @@ class _EstimacionTabState extends State<_EstimacionTab> with AutomaticKeepAliveC
                             children: [
                               Padding(
                                 padding: EdgeInsets.all(4.0),
-                                child: Text('Etapa', style: TextStyle(fontWeight: FontWeight.bold)),
+                                child: Text(
+                                  'Etapa',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                               Padding(
                                 padding: EdgeInsets.all(4.0),
-                                child: Text('Esfuerzo (Persona-Mes)', style: TextStyle(fontWeight: FontWeight.bold)),
+                                child: Text(
+                                  'Esfuerzo (Persona-Mes)',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                               Padding(
                                 padding: EdgeInsets.all(4.0),
-                                child: Text('Costo Persona-Mes (PEN)', style: TextStyle(fontWeight: FontWeight.bold)),
+                                child: Text(
+                                  'Costo Persona-Mes (PEN)',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                               Padding(
                                 padding: EdgeInsets.all(4.0),
-                                child: Text('Tiempo de desarrollo (Mes)', style: TextStyle(fontWeight: FontWeight.bold)),
+                                child: Text(
+                                  'Tiempo de desarrollo (Mes)',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ],
                           ),
-                          ...['Análisis', 'Diseño', 'Diseño detallado', 'Codificación', 'Integración', 'Mantenimiento'].map(
+                          ...[
+                            'Análisis',
+                            'Diseño',
+                            'Diseño detallado',
+                            'Codificación',
+                            'Integración',
+                            'Mantenimiento',
+                          ].map(
                             (etapa) => TableRow(
                               children: [
                                 Padding(
@@ -906,7 +1206,10 @@ class _EstimacionTabState extends State<_EstimacionTab> with AutomaticKeepAliveC
                                       decoration: const InputDecoration(
                                         isDense: true,
                                         border: OutlineInputBorder(),
-                                        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 8,
+                                          horizontal: 8,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -919,7 +1222,10 @@ class _EstimacionTabState extends State<_EstimacionTab> with AutomaticKeepAliveC
                                       decoration: const InputDecoration(
                                         isDense: true,
                                         border: OutlineInputBorder(),
-                                        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 8,
+                                          horizontal: 8,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -932,7 +1238,10 @@ class _EstimacionTabState extends State<_EstimacionTab> with AutomaticKeepAliveC
                                       decoration: const InputDecoration(
                                         isDense: true,
                                         border: OutlineInputBorder(),
-                                        contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                                        contentPadding: EdgeInsets.symmetric(
+                                          vertical: 8,
+                                          horizontal: 8,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -967,7 +1276,11 @@ class _EstimacionCardBox extends StatelessWidget {
   final String title;
   final String value;
   final String subtitle;
-  const _EstimacionCardBox({required this.title, required this.value, required this.subtitle});
+  const _EstimacionCardBox({
+    required this.title,
+    required this.value,
+    required this.subtitle,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -983,11 +1296,14 @@ class _EstimacionCardBox extends StatelessWidget {
         children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+          Text(
+            value,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+          ),
           const SizedBox(height: 4),
           Text(subtitle, style: const TextStyle(fontSize: 13)),
         ],
       ),
     );
   }
-} 
+}
