@@ -84,108 +84,7 @@ class Cocomo81View extends StatelessWidget {
                                   SingleChildScrollView(
                                     child: _ModoYTamanoTab(),
                                   ),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 12),
-                                      Center(
-                                        child: Container(
-                                          constraints: const BoxConstraints(
-                                            maxWidth: 600,
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 32,
-                                            vertical: 24,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border: Border.all(
-                                              color: Colors.black26,
-                                            ),
-                                            borderRadius: BorderRadius.circular(
-                                              10,
-                                            ),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black12,
-                                                blurRadius: 2,
-                                                offset: Offset(0, 1),
-                                              ),
-                                            ],
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              const Center(
-                                                child: Text(
-                                                  'Costo persona-mes',
-                                                  style: TextStyle(
-                                                    fontSize: 24,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                              const SizedBox(height: 16),
-                                              Row(
-                                                children: const [
-                                                  Expanded(
-                                                    child: Text(
-                                                      'Etapa',
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Text(
-                                                      'Costo persona-mes',
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(height: 4),
-                                              _CostoPersonaMesRow(
-                                                etapa: 'Análisis',
-                                              ),
-                                              _CostoPersonaMesRow(
-                                                etapa: 'Diseño',
-                                              ),
-                                              _CostoPersonaMesRow(
-                                                etapa: 'Diseño detallado',
-                                              ),
-                                              _CostoPersonaMesRow(
-                                                etapa: 'Codificación',
-                                              ),
-                                              _CostoPersonaMesRow(
-                                                etapa: 'Integración',
-                                              ),
-                                              _CostoPersonaMesRow(
-                                                etapa: 'Mantenimiento',
-                                              ),
-                                              const SizedBox(height: 16),
-                                              SizedBox(
-                                                width: 120,
-                                                child: ElevatedButton(
-                                                  onPressed: () {},
-                                                  child: const Text('Guardar'),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  const _CostoPersonaMesTab(),
                                   const _EstimacionTab(),
                                 ],
                               ),
@@ -959,7 +858,9 @@ class _CostDriverBox extends StatelessWidget {
 
 class _CostoPersonaMesRow extends StatelessWidget {
   final String etapa;
-  const _CostoPersonaMesRow({required this.etapa});
+  final TextEditingController controller;
+
+  const _CostoPersonaMesRow({required this.etapa, required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -973,6 +874,8 @@ class _CostoPersonaMesRow extends StatelessWidget {
             child: SizedBox(
               height: 32,
               child: TextField(
+                controller: controller,
+                keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   isDense: true,
                   border: OutlineInputBorder(),
@@ -986,6 +889,140 @@ class _CostoPersonaMesRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _CostoPersonaMesTab extends StatefulWidget {
+  const _CostoPersonaMesTab();
+
+  @override
+  State<_CostoPersonaMesTab> createState() => _CostoPersonaMesTabState();
+}
+
+class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
+  final Map<String, TextEditingController> _controladoresCosto = {
+    'Análisis': TextEditingController(),
+    'Diseño': TextEditingController(),
+    'Diseño detallado': TextEditingController(),
+    'Codificación': TextEditingController(),
+    'Integración': TextEditingController(),
+    'Mantenimiento': TextEditingController(),
+  };
+
+  Map<String, double> _costosGuardados = {};
+
+  @override
+  void dispose() {
+    for (final controller in _controladoresCosto.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 12),
+        Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 600),
+            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.black26),
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 2,
+                  offset: Offset(0, 1),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Center(
+                  child: Text(
+                    'Costo persona-mes',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: const [
+                    Expanded(
+                      child: Text(
+                        'Etapa',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Costo persona-mes',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                ..._controladoresCosto.entries.map((entry) {
+                  return _CostoPersonaMesRow(
+                    etapa: entry.key,
+                    controller: entry.value,
+                  );
+                }).toList(),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: 120,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final Map<String, double> nuevosCostos = {};
+                      _controladoresCosto.forEach((etapa, controller) {
+                        final valor = double.tryParse(controller.text) ?? 0.0;
+                        nuevosCostos[etapa] = valor;
+                      });
+
+                      setState(() {
+                        _costosGuardados = nuevosCostos;
+                      });
+
+                      showDialog(
+                        context: context,
+                        builder:
+                            (_) => AlertDialog(
+                              title: const Text('Resultado'),
+                              content: Text(
+                                'costo total: $_costosGuardados\n'
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('OK'),
+                                ),
+                              ],
+                            ),
+                      );
+
+                      // ScaffoldMessenger.of(context).showSnackBar(
+                      //   const SnackBar(
+                      //     content: Text('Costos guardados correctamente'),
+                      //   ),
+                      // );
+                    },
+                    child: const Text('Guardar'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
