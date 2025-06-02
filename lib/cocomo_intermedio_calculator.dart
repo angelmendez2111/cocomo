@@ -108,6 +108,8 @@ const Map<String, Map<String, double>> costDriverValues = {
   },
 };
 
+EstimacionResultado? estimacionGuardada;
+Map<String, double> costosGuardadosGlobal = {};
 
 class CocomoCalculator {
   static const Map<String, Map<String, double>> _coeficientes = {
@@ -218,4 +220,65 @@ class CocomoCalculator {
   }
 
 
+
+
 }
+
+class EstimacionResultado {
+  final double esfuerzoTotal;
+  final double tiempoTotal;
+  final double costoTotal;
+  final Map<String, double> esfuerzoEtapas;
+  final Map<String, double> tiempoEtapas;
+  final Map<String, double> costoEtapas;
+
+  EstimacionResultado({
+    required this.esfuerzoTotal,
+    required this.tiempoTotal,
+    required this.costoTotal,
+    required this.esfuerzoEtapas,
+    required this.tiempoEtapas,
+    required this.costoEtapas,
+  });
+}
+
+EstimacionResultado? calcularEstimacionCompleta({
+  required String modo,
+  required double kldc,
+  required double fec,
+  required Map<String, double> costosPM,
+}) {
+  if (modo.isEmpty || kldc <= 0 || fec <= 0 || costosPM.isEmpty) return null;
+
+  final esfuerzo = CocomoCalculator.calcularEsfuerzo(modo, kldc, fec);
+  final tiempo = CocomoCalculator.calcularTiempo(modo, esfuerzo);
+
+  final etapas = costosPM.keys.toList();
+  final esfuerzoPorEtapa = esfuerzo / etapas.length;
+  final tiempoPorEtapa = tiempo / etapas.length;
+
+  double costoTotal = 0.0;
+  final Map<String, double> esfuerzoEtapas = {};
+  final Map<String, double> tiempoEtapas = {};
+  final Map<String, double> costoEtapas = {};
+
+  for (final etapa in etapas) {
+    final costoPM = costosPM[etapa]!;
+    final costoEtapa = esfuerzoPorEtapa * costoPM;
+
+    esfuerzoEtapas[etapa] = esfuerzoPorEtapa;
+    tiempoEtapas[etapa] = tiempoPorEtapa;
+    costoEtapas[etapa] = costoEtapa;
+    costoTotal += costoEtapa;
+  }
+
+  return EstimacionResultado(
+    esfuerzoTotal: esfuerzo,
+    tiempoTotal: tiempo,
+    costoTotal: costoTotal,
+    esfuerzoEtapas: esfuerzoEtapas,
+    tiempoEtapas: tiempoEtapas,
+    costoEtapas: costoEtapas,
+  );
+}
+

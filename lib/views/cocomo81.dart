@@ -693,6 +693,28 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
                               _fecGuardado = fec;
                             });
 
+                            if (_modoGuardado.isNotEmpty &&
+                                _kldcGuardado > 0 &&
+                                _fecGuardado > 0 &&
+                                costosGuardadosGlobal.isNotEmpty) {
+                              final resultado = calcularEstimacionCompleta(
+                                modo: _modoGuardado,
+                                kldc: _kldcGuardado,
+                                fec: _fecGuardado,
+                                costosPM: costosGuardadosGlobal,
+                              );
+
+                              if (resultado != null) {
+                                estimacionGuardada = resultado;
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Estimación actualizada'),
+                                  ),
+                                );
+                              }
+                            }
+
                             showDialog(
                               context: context,
                               builder:
@@ -910,8 +932,6 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
     'Mantenimiento': TextEditingController(),
   };
 
-  Map<String, double> _costosGuardados = {};
-
   @override
   void dispose() {
     for (final controller in _controladoresCosto.values) {
@@ -988,9 +1008,36 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                         nuevosCostos[etapa] = valor;
                       });
 
-                      setState(() {
-                        _costosGuardados = nuevosCostos;
-                      });
+                      costosGuardadosGlobal = nuevosCostos;
+
+                      if (_modoGuardado.isNotEmpty &&
+                          _kldcGuardado > 0 &&
+                          _fecGuardado > 0) {
+                        final resultado = calcularEstimacionCompleta(
+                          modo: _modoGuardado,
+                          kldc: _kldcGuardado,
+                          fec: _fecGuardado,
+                          costosPM: costosGuardadosGlobal,
+                        );
+
+                        if (resultado != null) {
+                          estimacionGuardada = resultado;
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Estimación actualizada'),
+                            ),
+                          );
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Costos guardados. Faltan datos para estimar',
+                            ),
+                          ),
+                        );
+                      }
 
                       showDialog(
                         context: context,
@@ -998,7 +1045,7 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                             (_) => AlertDialog(
                               title: const Text('Resultado'),
                               content: Text(
-                                'costo total: $_costosGuardados\n'
+                                'costo total: $costosGuardadosGlobal\n'
                               ),
                               actions: [
                                 TextButton(
