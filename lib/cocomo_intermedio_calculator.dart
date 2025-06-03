@@ -119,6 +119,7 @@ const Map<String, Map<String, double>> costDriverValues = {
 
 EstimacionResultado? estimacionGuardada;
 Map<String, double> costosGuardadosGlobal = {};
+Map<String, double> esfuerzosGuardadosGlobal = {};
 
 class CocomoCalculator {
   static const Map<String, Map<String, double>> _coeficientes = {
@@ -262,11 +263,15 @@ EstimacionResultado? calcularEstimacionCompleta({
   required double kldc,
   required double fec,
   required Map<String, double> costosPM,
+  required Map<String, double> esfuerzosPorcentaje,
 }) {
-  if (modo.isEmpty || kldc <= 0 || fec <= 0 || costosPM.isEmpty) return null;
-
-  final esfuerzo = CocomoCalculator.calcularEsfuerzo(modo, kldc, fec);
-  final tiempo = CocomoCalculator.calcularTiempo(modo, esfuerzo);
+  if (modo.isEmpty ||
+      kldc <= 0 ||
+      fec <= 0 ||
+      costosPM.isEmpty ||
+      esfuerzosPorcentaje.isEmpty) {
+    return null;
+  }
 
   final coef = CocomoCalculator._coeficientes[modo];
   if (coef == null) return null;
@@ -275,41 +280,30 @@ EstimacionResultado? calcularEstimacionCompleta({
   final b = coef['b']!;
   final c = coef['c']!;
 
-  const etapas = [
-    'Análisis',
-    'Diseño',
-    'Diseño detallado',
-    'Codificación',
-    'Integración',
-    'Mantenimiento',
-  ];
-  final esfuerzoPorEtapa = esfuerzo / etapas.length;
-  final tiempoPorEtapa = tiempo / etapas.length;
+  final esfuerzoTotal = CocomoCalculator.calcularEsfuerzo(modo, kldc, fec);
+  final tiempoTotal = CocomoCalculator.calcularTiempo(modo, esfuerzoTotal);
 
-  double costoTotal = 0.0;
   final Map<String, double> esfuerzoEtapas = {};
   final Map<String, double> tiempoEtapas = {};
   final Map<String, double> costoEtapas = {};
+  double costoTotal = 0.0;
 
-  for (final etapa in etapas) {
-    final costoPM = costosPM[etapa] ?? 0.0;
-    final costoEtapa = esfuerzoPorEtapa * costoPM;
+  esfuerzosPorcentaje.forEach((etapa, porcentaje) {
+    final fraccion = porcentaje / 100.0;
+    final esfuerzoEtapa = esfuerzoTotal * fraccion;
+    final tiempoEtapa = tiempoTotal * fraccion;
+    final costoEtapa = esfuerzoEtapa * (costosPM[etapa] ?? 0);
 
-    esfuerzoEtapas[etapa] = esfuerzoPorEtapa;
-    tiempoEtapas[etapa] = tiempoPorEtapa;
+    esfuerzoEtapas[etapa] = esfuerzoEtapa;
+    tiempoEtapas[etapa] = tiempoEtapa;
     costoEtapas[etapa] = costoEtapa;
+
     costoTotal += costoEtapa;
-  }
-
-  print(
-    'Estimación total: Esfuerzo=$esfuerzo, Tiempo=$tiempo, Costo=$costoTotal',
-  );
-  print('Esfuerzo por etapa: $esfuerzoEtapas');
-
+  });
 
   return EstimacionResultado(
-    esfuerzoTotal: esfuerzo,
-    tiempoTotal: tiempo,
+    esfuerzoTotal: esfuerzoTotal,
+    tiempoTotal: tiempoTotal,
     costoTotal: costoTotal,
     a: a,
     b: b,

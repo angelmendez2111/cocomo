@@ -702,6 +702,7 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
                                 kldc: _kldcGuardado,
                                 fec: _fecGuardado,
                                 costosPM: costosGuardadosGlobal,
+                                esfuerzosPorcentaje: esfuerzosGuardadosGlobal,
                               );
 
                               if (resultado != null) {
@@ -880,9 +881,14 @@ class _CostDriverBox extends StatelessWidget {
 
 class _CostoPersonaMesRow extends StatelessWidget {
   final String etapa;
-  final TextEditingController controller;
+  final TextEditingController costoController;
+  final TextEditingController esfuerzoController;
 
-  const _CostoPersonaMesRow({required this.etapa, required this.controller});
+  const _CostoPersonaMesRow({
+    required this.etapa,
+    required this.costoController,
+    required this.esfuerzoController,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -891,21 +897,27 @@ class _CostoPersonaMesRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(child: Text(etapa)),
-          const SizedBox(width: 16),
+          const SizedBox(width: 8),
           Expanded(
-            child: SizedBox(
-              height: 32,
-              child: TextField(
-                controller: controller,
-                keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
-                  isDense: true,
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 8,
-                  ),
-                ),
+            child: TextField(
+              controller: costoController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Costo',
+                isDense: true,
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: TextField(
+              controller: esfuerzoController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Esfuerzo (%)',
+                isDense: true,
+                border: OutlineInputBorder(),
               ),
             ),
           ),
@@ -932,9 +944,21 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
     'Mantenimiento': TextEditingController(),
   };
 
+  final Map<String, TextEditingController> _controladoresEsfuerzo = {
+    'Análisis': TextEditingController(),
+    'Diseño': TextEditingController(),
+    'Diseño detallado': TextEditingController(),
+    'Codificación': TextEditingController(),
+    'Integración': TextEditingController(),
+    'Mantenimiento': TextEditingController(),
+  };
+
   @override
   void dispose() {
     for (final controller in _controladoresCosto.values) {
+      controller.dispose();
+    }
+    for (final controller in _controladoresEsfuerzo.values) {
       controller.dispose();
     }
     super.dispose();
@@ -947,13 +971,13 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
         const SizedBox(height: 12),
         Center(
           child: Container(
-            constraints: const BoxConstraints(maxWidth: 600),
+            constraints: const BoxConstraints(maxWidth: 700),
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 24),
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(color: Colors.black26),
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 2,
@@ -965,12 +989,9 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Center(
-                  child: Text(
-                    'Costo persona-mes',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
+                const Text(
+                  'Costo persona-mes',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -978,6 +999,13 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                     Expanded(
                       child: Text(
                         'Etapa',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        'Esfuerzo (%)',
+                        textAlign: TextAlign.center,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -991,10 +1019,44 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                   ],
                 ),
                 const SizedBox(height: 4),
-                ..._controladoresCosto.entries.map((entry) {
-                  return _CostoPersonaMesRow(
-                    etapa: entry.key,
-                    controller: entry.value,
+                ..._controladoresCosto.keys.map((etapa) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      children: [
+                        Expanded(child: Text(etapa)),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextField(
+                            controller: _controladoresEsfuerzo[etapa],
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 8,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextField(
+                            controller: _controladoresCosto[etapa],
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              isDense: true,
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 8,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 }).toList(),
                 const SizedBox(height: 16),
@@ -1003,12 +1065,39 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                   child: ElevatedButton(
                     onPressed: () {
                       final Map<String, double> nuevosCostos = {};
-                      _controladoresCosto.forEach((etapa, controller) {
-                        final valor = double.tryParse(controller.text) ?? 0.0;
-                        nuevosCostos[etapa] = valor;
-                      });
+                      final Map<String, double> nuevosEsfuerzos = {};
+                      double sumaEsfuerzo = 0;
+
+                      for (final etapa in _controladoresCosto.keys) {
+                        final costo =
+                            double.tryParse(_controladoresCosto[etapa]!.text) ??
+                            0.0;
+                        final esfuerzo =
+                            double.tryParse(
+                              _controladoresEsfuerzo[etapa]!.text,
+                            ) ??
+                            0.0;
+
+                        if (costo > 0 && esfuerzo > 0) {
+                          nuevosCostos[etapa] = costo;
+                          nuevosEsfuerzos[etapa] = esfuerzo;
+                          sumaEsfuerzo += esfuerzo;
+                        }
+                      }
+
+                      if (sumaEsfuerzo != 100) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'La suma de esfuerzo por etapa debe ser exactamente 100%.',
+                            ),
+                          ),
+                        );
+                        return;
+                      }
 
                       costosGuardadosGlobal = nuevosCostos;
+                      esfuerzosGuardadosGlobal = nuevosEsfuerzos;
 
                       if (_modoGuardado.isNotEmpty &&
                           _kldcGuardado > 0 &&
@@ -1017,12 +1106,12 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                           modo: _modoGuardado,
                           kldc: _kldcGuardado,
                           fec: _fecGuardado,
-                          costosPM: costosGuardadosGlobal,
+                          costosPM: nuevosCostos,
+                          esfuerzosPorcentaje: nuevosEsfuerzos,
                         );
 
                         if (resultado != null) {
                           estimacionGuardada = resultado;
-
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Estimación actualizada'),
@@ -1033,14 +1122,11 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                              'Costos guardados. Faltan datos para estimar\n',
-                              
+                              'Costos guardados. Faltan datos para estimar.',
                             ),
                           ),
                         );
                       }
-
-                      print('$_modoGuardado $_kldcGuardado $_fecGuardado $costosGuardadosGlobal');
 
                       showDialog(
                         context: context,
@@ -1048,7 +1134,7 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                             (_) => AlertDialog(
                               title: const Text('Resultado'),
                               content: Text(
-                                'costo total: $costosGuardadosGlobal\n'
+                                'Costo total: $nuevosCostos\nEsfuerzos: $nuevosEsfuerzos',
                               ),
                               actions: [
                                 TextButton(
@@ -1058,12 +1144,6 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                               ],
                             ),
                       );
-
-                      // ScaffoldMessenger.of(context).showSnackBar(
-                      //   const SnackBar(
-                      //     content: Text('Costos guardados correctamente'),
-                      //   ),
-                      // );
                     },
                     child: const Text('Guardar'),
                   ),
