@@ -1033,11 +1033,14 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text(
-                              'Costos guardados. Faltan datos para estimar',
+                              'Costos guardados. Faltan datos para estimar\n',
+                              
                             ),
                           ),
                         );
                       }
+
+                      print('$_modoGuardado $_kldcGuardado $_fecGuardado $costosGuardadosGlobal');
 
                       showDialog(
                         context: context,
@@ -1082,6 +1085,42 @@ class _EstimacionTab extends StatefulWidget {
 
 class _EstimacionTabState extends State<_EstimacionTab>
     with AutomaticKeepAliveClientMixin {
+  double esfuerzoTotal = 0.0;
+  double tiempoTotal = 0.0;
+  double costoTotal = 0.0;
+
+  double a = 0.0;
+  double b = 0.0;
+  double c = 0.0;
+
+  Map<String, double> esfuerzoEtapas = {};
+  Map<String, double> tiempoEtapas = {};
+  Map<String, double> costoEtapas = {};
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    setState(() {
+      _cargarEstimacion();
+    });
+  }
+
+  void _cargarEstimacion() {
+    if (estimacionGuardada != null) {
+      esfuerzoTotal = estimacionGuardada!.esfuerzoTotal;
+      tiempoTotal = estimacionGuardada!.tiempoTotal;
+      costoTotal = estimacionGuardada!.costoTotal;
+
+      a = estimacionGuardada!.a;
+      b = estimacionGuardada!.b;
+      c = estimacionGuardada!.c;
+
+      esfuerzoEtapas = estimacionGuardada!.esfuerzoEtapas;
+      tiempoEtapas = estimacionGuardada!.tiempoEtapas;
+      costoEtapas = estimacionGuardada!.costoEtapas;
+    }
+  }
+
   @override
   bool get wantKeepAlive => true;
 
@@ -1128,16 +1167,19 @@ class _EstimacionTabState extends State<_EstimacionTab>
                         flex: 3,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               'Ecuaciones Utilizadas',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             SizedBox(height: 8),
-                            Text('Esfuerzo (ESF) = 2.8 × (KLDC)^1.20 × FEC'),
                             Text(
-                              'Tiempo de desarrollo (TDES) = 2.5 × (ESF)^0.32',
+                              'Esfuerzo (ESF) = ${a.toStringAsFixed(2)} × (KLDC)^${b.toStringAsFixed(2)} × FEC',
                             ),
+                            Text(
+                              'Tiempo (TDES) = 2.5 × (ESF)^${c.toStringAsFixed(2)}',
+                            ),
+
                           ],
                         ),
                       ),
@@ -1184,7 +1226,7 @@ class _EstimacionTabState extends State<_EstimacionTab>
                           Expanded(
                             child: _EstimacionCardBox(
                               title: 'Esfuerzo Total',
-                              value: '39.55',
+                              value: esfuerzoTotal.toStringAsFixed(2),
                               subtitle: 'Personas-mes',
                             ),
                           ),
@@ -1192,7 +1234,7 @@ class _EstimacionTabState extends State<_EstimacionTab>
                           Expanded(
                             child: _EstimacionCardBox(
                               title: 'Tiempo de Desarrollo',
-                              value: '9.06',
+                              value: tiempoTotal.toStringAsFixed(2),
                               subtitle: 'Meses',
                             ),
                           ),
@@ -1200,7 +1242,7 @@ class _EstimacionTabState extends State<_EstimacionTab>
                           Expanded(
                             child: _EstimacionCardBox(
                               title: 'Costo Total',
-                              value: '155422.47',
+                              value: costoTotal.toStringAsFixed(2),
                               subtitle: 'Soles',
                             ),
                           ),
@@ -1284,50 +1326,23 @@ class _EstimacionTabState extends State<_EstimacionTab>
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
-                                  child: SizedBox(
-                                    height: 28,
-                                    child: TextField(
-                                      decoration: const InputDecoration(
-                                        isDense: true,
-                                        border: OutlineInputBorder(),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 8,
-                                          horizontal: 8,
-                                        ),
-                                      ),
-                                    ),
+                                  child: Text(
+                                    esfuerzoEtapas[etapa]?.toStringAsFixed(2) ??
+                                        '-',
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
-                                  child: SizedBox(
-                                    height: 28,
-                                    child: TextField(
-                                      decoration: const InputDecoration(
-                                        isDense: true,
-                                        border: OutlineInputBorder(),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 8,
-                                          horizontal: 8,
-                                        ),
-                                      ),
-                                    ),
+                                  child: Text(
+                                    costoEtapas[etapa]?.toStringAsFixed(2) ??
+                                        '-',
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
-                                  child: SizedBox(
-                                    height: 28,
-                                    child: TextField(
-                                      decoration: const InputDecoration(
-                                        isDense: true,
-                                        border: OutlineInputBorder(),
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 8,
-                                          horizontal: 8,
-                                        ),
-                                      ),
-                                    ),
+                                  child: Text(
+                                    tiempoEtapas[etapa]?.toStringAsFixed(2) ??
+                                        '-',
                                   ),
                                 ),
                               ],

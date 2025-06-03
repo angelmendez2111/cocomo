@@ -108,6 +108,15 @@ const Map<String, Map<String, double>> costDriverValues = {
   },
 };
 
+// final etapas = [
+//   'Análisis',
+//   'Diseño',
+//   'Diseño detallado',
+//   'Codificación',
+//   'Integración',
+//   'Mantenimiento',
+// ];
+
 EstimacionResultado? estimacionGuardada;
 Map<String, double> costosGuardadosGlobal = {};
 
@@ -228,6 +237,9 @@ class EstimacionResultado {
   final double esfuerzoTotal;
   final double tiempoTotal;
   final double costoTotal;
+  final double a;
+  final double b;
+  final double c;
   final Map<String, double> esfuerzoEtapas;
   final Map<String, double> tiempoEtapas;
   final Map<String, double> costoEtapas;
@@ -236,6 +248,9 @@ class EstimacionResultado {
     required this.esfuerzoTotal,
     required this.tiempoTotal,
     required this.costoTotal,
+    required this.a,
+    required this.b,
+    required this.c,
     required this.esfuerzoEtapas,
     required this.tiempoEtapas,
     required this.costoEtapas,
@@ -253,7 +268,21 @@ EstimacionResultado? calcularEstimacionCompleta({
   final esfuerzo = CocomoCalculator.calcularEsfuerzo(modo, kldc, fec);
   final tiempo = CocomoCalculator.calcularTiempo(modo, esfuerzo);
 
-  final etapas = costosPM.keys.toList();
+  final coef = CocomoCalculator._coeficientes[modo];
+  if (coef == null) return null;
+
+  final a = coef['a']!;
+  final b = coef['b']!;
+  final c = coef['c']!;
+
+  const etapas = [
+    'Análisis',
+    'Diseño',
+    'Diseño detallado',
+    'Codificación',
+    'Integración',
+    'Mantenimiento',
+  ];
   final esfuerzoPorEtapa = esfuerzo / etapas.length;
   final tiempoPorEtapa = tiempo / etapas.length;
 
@@ -263,7 +292,7 @@ EstimacionResultado? calcularEstimacionCompleta({
   final Map<String, double> costoEtapas = {};
 
   for (final etapa in etapas) {
-    final costoPM = costosPM[etapa]!;
+    final costoPM = costosPM[etapa] ?? 0.0;
     final costoEtapa = esfuerzoPorEtapa * costoPM;
 
     esfuerzoEtapas[etapa] = esfuerzoPorEtapa;
@@ -272,10 +301,19 @@ EstimacionResultado? calcularEstimacionCompleta({
     costoTotal += costoEtapa;
   }
 
+  print(
+    'Estimación total: Esfuerzo=$esfuerzo, Tiempo=$tiempo, Costo=$costoTotal',
+  );
+  print('Esfuerzo por etapa: $esfuerzoEtapas');
+
+
   return EstimacionResultado(
     esfuerzoTotal: esfuerzo,
     tiempoTotal: tiempo,
     costoTotal: costoTotal,
+    a: a,
+    b: b,
+    c: c,
     esfuerzoEtapas: esfuerzoEtapas,
     tiempoEtapas: tiempoEtapas,
     costoEtapas: costoEtapas,
