@@ -140,9 +140,9 @@ class CocomoCalculator {
   }
 
   static double calcularCostoTotal(
-    double esfuerzo,
-    Map<String, double> costoPorEtapa,
-  ) {
+      double esfuerzo,
+      Map<String, double> costoPorEtapa,
+      ) {
     final esfuerzoPorEtapa = esfuerzo / costoPorEtapa.length;
     double total = 0;
     costoPorEtapa.forEach((etapa, costoPM) {
@@ -314,4 +314,3 @@ EstimacionResultado? calcularEstimacionCompleta({
     costoEtapas: costoEtapas,
   );
 }
-
