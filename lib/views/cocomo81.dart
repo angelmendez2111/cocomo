@@ -121,7 +121,6 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
   int _resultadoPF = 0;
   double _resultadoKLDC = 0.0;
 
-
   final cocomo = CocomoCalculator();
   final List<String> _opcionesModo = ['Orgánico', 'Moderado', 'Empotrado'];
   final List<String> _opcionesLenguaje = [
@@ -167,7 +166,10 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
   };
 
   // Estado de selección de la tabla (5 filas x 3 columnas)
-  List<int?> _seleccionTabla = List.generate(5, (_) => null); // null: nada, 0: baja, 1: media, 2: alta
+  List<int?> _seleccionTabla = List.generate(
+    5,
+    (_) => null,
+  ); // null: nada, 0: baja, 1: media, 2: alta
   final List<List<TextEditingController>> _pfControllers = List.generate(
     5,
     (_) => List.generate(3, (_) => TextEditingController()),
@@ -177,7 +179,6 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
   final GlobalKey<_CostDriverSectionState> _proyectoKey = GlobalKey();
   final GlobalKey<_CostDriverSectionState> _personalKey = GlobalKey();
   final GlobalKey<_CostDriverSectionState> _plataformaKey = GlobalKey();
-
 
   @override
   Widget build(BuildContext context) {
@@ -577,7 +578,9 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
                         const SizedBox(height: 16),
                         Text('Total: $_resultadoPF Puntos de Función'),
                         const SizedBox(height: 4),
-                        Text('Líneas de Código (KLDC): ${_resultadoKLDC.toStringAsFixed(2)}'),
+                        Text(
+                          'Líneas de Código (KLDC): ${_resultadoKLDC.toStringAsFixed(2)}',
+                        ),
                       ],
                     ),
                   ),
@@ -679,10 +682,9 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
                             };
                             // print('SELECCIONADOS: $seleccionados');
 
-                            final fec =
-                                cocomo.calcularFECDesdeCostDrivers(
-                                  seleccionados,
-                                );
+                            final fec = cocomo.calcularFECDesdeCostDrivers(
+                              seleccionados,
+                            );
 
                             setState(() {
                               _modoGuardado = _modoDesarrollo;
@@ -706,7 +708,11 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
                               );
 
                               if (resultado != null) {
-                                estimacionGuardada = resultado;
+                                setState(() {
+                                  estimacionGuardada = resultado;
+                                  estimacionVersion
+                                      .value++; // Notifica que hay nueva estimación
+                                });
 
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -720,11 +726,11 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
                               context: context,
                               builder:
                                   (_) => AlertDialog(
-                                    title: const Text('Resultado'),
+                                    title: const Text('Valores Ingresados'),
                                     content: Text(
-                                      'modo: $_modoGuardado\n'
-                                      'KLDC: $_kldcGuardado\n'
-                                      'fec: $_fecGuardado\n',
+                                      'Modo de Desarrollo: $_modoGuardado\n'
+                                      'Tamaño (KLDC): $_kldcGuardado\n'
+                                      'FEC: ${_fecGuardado.toStringAsFixed(2)}\n',
                                     ),
                                     actions: [
                                       TextButton(
@@ -756,6 +762,7 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
       ],
     );
   }
+
   @override
   void dispose() {
     for (final fila in _pfControllers) {
@@ -765,14 +772,13 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
     }
     super.dispose();
   }
-
 }
 
 class _CostDriverSection extends StatefulWidget {
   final String title;
   final List<String> items;
   const _CostDriverSection({Key? key, required this.title, required this.items})
-    : super(key: key); 
+    : super(key: key);
 
   @override
   State<_CostDriverSection> createState() => _CostDriverSectionState();
@@ -801,7 +807,6 @@ class _CostDriverSectionState extends State<_CostDriverSection> {
     }
     return resultado;
   }
-
 
   // @override
   // void initState() {
@@ -934,7 +939,11 @@ class _CostoPersonaMesTab extends StatefulWidget {
   State<_CostoPersonaMesTab> createState() => _CostoPersonaMesTabState();
 }
 
-class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
+class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final Map<String, TextEditingController> _controladoresCosto = {
     'Análisis': TextEditingController(),
     'Diseño': TextEditingController(),
@@ -966,6 +975,8 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Column(
       children: [
         const SizedBox(height: 12),
@@ -1091,6 +1102,7 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                             content: Text(
                               'La suma de esfuerzo por etapa debe ser exactamente 100%.',
                             ),
+                            backgroundColor: Colors.red,
                           ),
                         );
                         return;
@@ -1111,7 +1123,11 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                         );
 
                         if (resultado != null) {
-                          estimacionGuardada = resultado;
+                          setState(() {
+                            estimacionGuardada = resultado;
+                            estimacionVersion
+                                .value++; // Notifica que hay nueva estimación
+                          });
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text('Estimación actualizada'),
@@ -1123,19 +1139,47 @@ class _CostoPersonaMesTabState extends State<_CostoPersonaMesTab> {
                           const SnackBar(
                             content: Text(
                               'Costos guardados. Faltan datos para estimar.',
+                              style: TextStyle(color: Colors.black),
                             ),
+                            backgroundColor: Colors.yellowAccent,
                           ),
                         );
                       }
+
+                      // showDialog(
+                      //   context: context,
+                      //   builder:
+                      //       (_) => AlertDialog(
+                      //         title: const Text('Resultado'),
+                      //         content: Text(
+                      //           'Costo total: $nuevosCostos\nEsfuerzos: $nuevosEsfuerzos',
+                      //         ),
+                      //         actions: [
+                      //           TextButton(
+                      //             onPressed: () => Navigator.pop(context),
+                      //             child: const Text('OK'),
+                      //           ),
+                      //         ],
+                      //       ),
+                      // );
+
+                      final resumen = nuevosEsfuerzos.entries
+                          .map((entry) {
+                            final etapa = entry.key;
+                            final esfuerzo = entry.value.toStringAsFixed(0);
+                            final costo =
+                                nuevosCostos[etapa]?.toStringAsFixed(2) ??
+                                '0.00';
+                            return '$etapa: $esfuerzo% - $costo';
+                          })
+                          .join('\n');
 
                       showDialog(
                         context: context,
                         builder:
                             (_) => AlertDialog(
-                              title: const Text('Resultado'),
-                              content: Text(
-                                'Costo total: $nuevosCostos\nEsfuerzos: $nuevosEsfuerzos',
-                              ),
+                              title: const Text('Etapas Ingresadas'),
+                              content: Text(resumen),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(context),
@@ -1207,246 +1251,270 @@ class _EstimacionTabState extends State<_EstimacionTab>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const SizedBox(height: 12),
-        Center(
-          child: Container(
-            constraints: const BoxConstraints(maxWidth: 900),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.black26),
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 2,
-                  offset: Offset(0, 1),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Ecuaciones Utilizadas
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black26),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Ecuaciones Utilizadas',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'Esfuerzo (ESF) = ${a.toStringAsFixed(2)} × (KLDC)^${b.toStringAsFixed(2)} × FEC',
-                            ),
-                            Text(
-                              'Tiempo (TDES) = 2.5 × (ESF)^${c.toStringAsFixed(2)}',
-                            ),
 
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              '* KLCD: tamaño del proyecto en Kilo Líneas de Código',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                            Text(
-                              '* FEC: conductores de coste',
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+    return ValueListenableBuilder<int>(
+      valueListenable: estimacionVersion,
+      builder: (context, version, _) {
+        _cargarEstimacion();
+        
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(height: 12),
+            Center(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 900),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
                 ),
-                // Resultado de la Estimación
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black26),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Resultado de la Estimación',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.black26),
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 2,
+                      offset: Offset(0, 1),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // Ecuaciones Utilizadas
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.black26),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      const SizedBox(height: 12),
-                      Row(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: _EstimacionCardBox(
-                              title: 'Esfuerzo Total',
-                              value: esfuerzoTotal.toStringAsFixed(2),
-                              subtitle: 'Personas-mes',
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: _EstimacionCardBox(
-                              title: 'Tiempo de Desarrollo',
-                              value: tiempoTotal.toStringAsFixed(2),
-                              subtitle: 'Meses',
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: _EstimacionCardBox(
-                              title: 'Costo Total',
-                              value: costoTotal.toStringAsFixed(2),
-                              subtitle: 'Soles',
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                // Estimación por Etapas
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(color: Colors.black26),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Estimación por Etapas',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Table(
-                        columnWidths: const {
-                          0: FlexColumnWidth(2),
-                          1: FlexColumnWidth(),
-                          2: FlexColumnWidth(),
-                          3: FlexColumnWidth(),
-                        },
-                        border: TableBorder.all(color: Colors.black26),
-                        children: [
-                          const TableRow(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child: Text(
-                                  'Etapa',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child: Text(
-                                  'Esfuerzo (Persona-Mes)',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child: Text(
-                                  'Costo Persona-Mes (PEN)',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(4.0),
-                                child: Text(
-                                  'Tiempo de desarrollo (Mes)',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ],
-                          ),
-                          ...[
-                            'Análisis',
-                            'Diseño',
-                            'Diseño detallado',
-                            'Codificación',
-                            'Integración',
-                            'Mantenimiento',
-                          ].map(
-                            (etapa) => TableRow(
+                            flex: 3,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text(etapa),
+                                Text(
+                                  'Ecuaciones Utilizadas',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text(
-                                    esfuerzoEtapas[etapa]?.toStringAsFixed(2) ??
-                                        '-',
-                                  ),
+                                SizedBox(height: 8),
+                                Text(
+                                  'Esfuerzo (ESF) = ${a.toStringAsFixed(2)} × (KLDC)^${b.toStringAsFixed(2)} × FEC',
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text(
-                                    costoEtapas[etapa]?.toStringAsFixed(2) ??
-                                        '-',
-                                  ),
+                                Text(
+                                  'Tiempo (TDES) = 2.5 × (ESF)^${c.toStringAsFixed(2)}',
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Text(
-                                    tiempoEtapas[etapa]?.toStringAsFixed(2) ??
-                                        '-',
-                                  ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            flex: 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Text(
+                                  '* KLCD: tamaño del proyecto en Kilo Líneas de Código',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                Text(
+                                  '* FEC: conductores de coste',
+                                  style: TextStyle(fontSize: 12),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    // Resultado de la Estimación
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.black26),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Resultado de la Estimación',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: _EstimacionCardBox(
+                                  title: 'Esfuerzo Total',
+                                  value: esfuerzoTotal.toStringAsFixed(2),
+                                  subtitle: 'Personas-mes',
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: _EstimacionCardBox(
+                                  title: 'Tiempo de Desarrollo',
+                                  value: tiempoTotal.toStringAsFixed(2),
+                                  subtitle: 'Meses',
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: _EstimacionCardBox(
+                                  title: 'Costo Total',
+                                  value: costoTotal.toStringAsFixed(2),
+                                  subtitle: 'Soles',
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Estimación por Etapas
+                    Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.black26),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Estimación por Etapas',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 8),
+                          Table(
+                            columnWidths: const {
+                              0: FlexColumnWidth(2),
+                              1: FlexColumnWidth(),
+                              2: FlexColumnWidth(),
+                              3: FlexColumnWidth(),
+                            },
+                            border: TableBorder.all(color: Colors.black26),
+                            children: [
+                              const TableRow(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: Text(
+                                      'Etapa',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: Text(
+                                      'Esfuerzo (Persona-Mes)',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: Text(
+                                      'Costo Persona-Mes (PEN)',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(4.0),
+                                    child: Text(
+                                      'Tiempo de desarrollo (Mes)',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              ...[
+                                'Análisis',
+                                'Diseño',
+                                'Diseño detallado',
+                                'Codificación',
+                                'Integración',
+                                'Mantenimiento',
+                              ].map(
+                                (etapa) => TableRow(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Text(etapa),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Text(
+                                        esfuerzoEtapas[etapa]?.toStringAsFixed(
+                                              2,
+                                            ) ??
+                                            '-',
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Text(
+                                        costoEtapas[etapa]?.toStringAsFixed(
+                                              2,
+                                            ) ??
+                                            '-',
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Text(
+                                        tiempoEtapas[etapa]?.toStringAsFixed(
+                                              2,
+                                            ) ??
+                                            '-',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Botón Guardar Estimación
+                    // const SizedBox(height: 8),
+                    // SizedBox(
+                    //   width: 220,
+                    //   child: ElevatedButton(
+                    //     onPressed: () {},
+                    //     child: const Text('Guardar Estimación'),
+                    //   ),
+                    // ),
+                  ],
                 ),
-                // Botón Guardar Estimación
-                const SizedBox(height: 8),
-                SizedBox(
-                  width: 220,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Guardar Estimación'),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 }

@@ -120,6 +120,7 @@ const Map<String, Map<String, double>> costDriverValues = {
 EstimacionResultado? estimacionGuardada;
 Map<String, double> costosGuardadosGlobal = {};
 Map<String, double> esfuerzosGuardadosGlobal = {};
+ValueNotifier<int> estimacionVersion = ValueNotifier<int>(0);
 
 class CocomoCalculator {
   static const Map<String, Map<String, double>> _coeficientes = {
