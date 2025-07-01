@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'cocomo81.dart';
+import 'cocomo2.dart';
 
 class PrincipalView extends StatelessWidget {
   const PrincipalView({super.key});
 
   static final Cocomo81View _cocomo81View = Cocomo81View();
+  static final Cocomo2View _cocomo2View = Cocomo2View();
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +72,17 @@ class PrincipalView extends StatelessWidget {
                     titulo: 'COCOMO II Post-Arquit',
                     descripcion:
                         'Versión actualizada que incluye conductores de escala y factores de esfuerzo para proyectos modernos.',
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  _cocomo2View,
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(width: 32),
                   _EstimacionCard(
