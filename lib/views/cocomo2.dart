@@ -186,14 +186,14 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(width: 24),
+                  // const SizedBox(width: 24),
                   Expanded(
                     flex: 1,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Padding(
-                          padding: EdgeInsets.only(bottom: 2),
+                          padding: EdgeInsets.only(left: 6, bottom: 2),
                           child: Text(
                             'Tamaño del Software',
                             style: TextStyle(
@@ -690,6 +690,7 @@ class _ModoYTamanoTabState extends State<_ModoYTamanoTab>
                                     title: const Text('Valores Ingresados'),
                                     content: Text(
                                       'Tamaño (KLDC): $_kldcGuardado\n'
+                                      'Suma: ${(_sfGuardado * 100).toStringAsFixed(2)}\n'
                                       'SF: ${_sfGuardado.toStringAsFixed(2)}\n'
                                       'FEC: ${_fecGuardado.toStringAsFixed(2)}\n',
                                     ),
