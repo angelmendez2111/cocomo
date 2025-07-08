@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'cocomo81.dart';
+import 'cocomo2.dart';
+import 'casos_uso.dart';
 
 class PrincipalView extends StatelessWidget {
   const PrincipalView({super.key});
 
   static final Cocomo81View _cocomo81View = Cocomo81View();
+  static final Cocomo2View _cocomo2View = Cocomo2View();
+  static final UseCasePointsView _useCasePointsView = UseCasePointsView();
 
   @override
   Widget build(BuildContext context) {
@@ -70,14 +74,34 @@ class PrincipalView extends StatelessWidget {
                     titulo: 'COCOMO II Post-Arquit',
                     descripcion:
                         'Versión actualizada que incluye conductores de escala y factores de esfuerzo para proyectos modernos.',
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  _cocomo2View,
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(width: 32),
                   _EstimacionCard(
                     titulo: 'Puntos de Casos de Uso',
                     descripcion:
                         'Estimación basada en la complejidad de los casos de uso del sistema con factores de ajuste.',
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) =>
+                                  _useCasePointsView,
+                          transitionDuration: Duration.zero,
+                          reverseTransitionDuration: Duration.zero,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
