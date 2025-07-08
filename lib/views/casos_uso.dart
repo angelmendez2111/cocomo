@@ -171,76 +171,41 @@ class _ConteoTabState extends State<_ConteoTab>
         children: [
           // Columna Izquierda
           Expanded(
-            flex: 1,
-            child: Column(
-              children: [
-                _buildCard(
-                  title: '1. Peso de Actores (PA)',
-                  child: Column(
-                    children: [
-                      _InputRowConteo(
-                        label: 'Simple (API)',
-                        peso: pesosActores['Simple']!,
-                        controller: _actoresSimples,
-                      ),
-                      _InputRowConteo(
-                        label: 'Medio (Texto)',
-                        peso: pesosActores['Medio']!,
-                        controller: _actoresMedios,
-                      ),
-                      _InputRowConteo(
-                        label: 'Complejo (GUI)',
-                        peso: pesosActores['Complejo']!,
-                        controller: _actoresComplejos,
-                      ),
-                      const Divider(),
-                      _ResultRow(
-                        label: 'Total PA:',
-                        value: _totalPA.toStringAsFixed(0),
-                      ),
-                    ],
+            flex: 3,
+            child: _buildCard(
+              title: 'Peso de Actores (PA)',
+              child: Column(
+                children: [
+                  _InputRowConteo(
+                    label: 'Simple (API)',
+                    peso: pesosActores['Simple']!,
+                    controller: _actoresSimples,
                   ),
-                ),
-                const SizedBox(height: 24),
-                _buildCard(
-                  title: '3. Puntos de Caso de Uso sin Ajustar (PCUSA)',
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'PCUSA = PA + PCU',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey.shade700,
-                        ),
-                      ),
-                      Text(
-                        'PCUSA = ${_totalPA.toStringAsFixed(0)} + ${_totalPCU.toStringAsFixed(0)}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey.shade700,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Center(
-                        child: _ResultRow(
-                          label: 'Total PCUSA:',
-                          value: _totalPCUSA.toStringAsFixed(0),
-                          isLarge: true,
-                        ),
-                      ),
-                    ],
+                  _InputRowConteo(
+                    label: 'Medio (Texto)',
+                    peso: pesosActores['Medio']!,
+                    controller: _actoresMedios,
                   ),
-                ),
-              ],
+                  _InputRowConteo(
+                    label: 'Complejo (GUI)',
+                    peso: pesosActores['Complejo']!,
+                    controller: _actoresComplejos,
+                  ),
+                  const Divider(),
+                  _ResultRow(
+                    label: 'Total PA:',
+                    value: _totalPA.toStringAsFixed(0),
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(width: 24),
-          // Columna Derecha
+          // Columna Central
           Expanded(
-            flex: 1,
+            flex: 3,
             child: _buildCard(
-              title: '2. Peso de Casos de Uso (PCU)',
+              title: 'Peso de Casos de Uso (PCU)',
               child: Column(
                 children: [
                   _InputRowConteo(
@@ -262,6 +227,35 @@ class _ConteoTabState extends State<_ConteoTab>
                   _ResultRow(
                     label: 'Total PCU:',
                     value: _totalPCU.toStringAsFixed(0),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(width: 24),
+          // Columna Derecha
+          Expanded(
+            flex: 2,
+            child: _buildCard(
+              title: 'Puntos de Caso de Uso sin Ajustar (PCUSA)',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'PCUSA = PA + PCU',
+                    style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                  ),
+                  Text(
+                    'PCUSA = ${_totalPA.toStringAsFixed(0)} + ${_totalPCU.toStringAsFixed(0)}',
+                    style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                  ),
+                  const SizedBox(height: 12),
+                  Center(
+                    child: _ResultRow(
+                      label: 'Total PCUSA:',
+                      value: _totalPCUSA.toStringAsFixed(0),
+                      isLarge: true,
+                    ),
                   ),
                 ],
               ),
@@ -321,7 +315,7 @@ class _FactoresTabState extends State<_FactoresTab>
   }
 
   void _calcularFinal() {
-    final pcusa = pcusaGlobal; 
+    final pcusa = pcusaGlobal;
     final pcua = pcusa * _fct * _fa;
     final esfuerzo = widget.calculator.calcularEsfuerzo(
       pcua,
@@ -362,7 +356,7 @@ class _FactoresTabState extends State<_FactoresTab>
               Expanded(
                 flex: 6,
                 child: _buildCard(
-                  title: '4. Factor de Complejidad Técnica (FCT)',
+                  title: 'Factor de Complejidad Técnica (FCT)',
                   child: Column(
                     children: [
                       Row(
@@ -422,7 +416,7 @@ class _FactoresTabState extends State<_FactoresTab>
               Expanded(
                 flex: 5,
                 child: _buildCard(
-                  title: '5. Factor de Ambiente (FA)',
+                  title: 'Factor de Ambiente (FA)',
                   child: Column(
                     children: [
                       Row(
@@ -474,9 +468,9 @@ class _FactoresTabState extends State<_FactoresTab>
                         isLarge: true,
                       ),
 
-                      const SizedBox(height: 24), 
+                      const SizedBox(height: 24),
                       SizedBox(
-                        // width: double.infinity, 
+                        // width: double.infinity,
                         width: 250,
                         child: ElevatedButton(
                           onPressed: _calcularFinal,
