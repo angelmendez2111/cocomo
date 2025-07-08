@@ -144,6 +144,7 @@ class _ConteoTabState extends State<_ConteoTab>
         cantComplejos: int.tryParse(_casosComplejos.text) ?? 0,
       );
       _totalPCUSA = _totalPA + _totalPCU;
+      pcusaGlobal = _totalPCUSA;
     });
   }
 
@@ -320,7 +321,7 @@ class _FactoresTabState extends State<_FactoresTab>
   }
 
   void _calcularFinal() {
-    final pcusa = pcusaGlobal; // Usa la variable global
+    final pcusa = pcusaGlobal; 
     final pcua = pcusa * _fct * _fa;
     final esfuerzo = widget.calculator.calcularEsfuerzo(
       pcua,
@@ -495,20 +496,6 @@ class _FactoresTabState extends State<_FactoresTab>
               ),
             ],
           ),
-          // const SizedBox(height: 32),
-          // Center(
-          //   child: ElevatedButton.icon(
-          //     icon: const Icon(Icons.calculate),
-          //     label: const Text('Calcular Estimación Final'),
-          //     onPressed: _calcularFinal,
-          //     style: ElevatedButton.styleFrom(
-          //       padding: const EdgeInsets.symmetric(
-          //         horizontal: 24,
-          //         vertical: 16,
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
